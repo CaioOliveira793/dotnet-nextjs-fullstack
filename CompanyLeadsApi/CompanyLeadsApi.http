@@ -1,0 +1,44 @@
+@HostAddress = http://localhost:5004
+
+GET {{HostAddress}}/leads/2e63341a-e627-48ac-bb1a-9d56e2e9cc4f
+Accept: application/json
+
+###
+
+GET {{HostAddress}}/leads?status=New&search=my-search-term
+Accept: application/json
+
+###
+
+POST {{HostAddress}}/leads
+Content-Type: application/json
+Accept: application/json
+
+{
+	"category": "painter",
+	"description": "Paint job",
+	"price": "89.00",
+	"contact_first_name": "John",
+	"suburb": "Yanderra 2574"
+}
+
+###
+
+PUT {{HostAddress}}/leads/2e63341a-e627-48ac-bb1a-9d56e2e9cc4f/accept
+Content-Type: application/json
+Accept: application/json
+
+{
+	"full_name": "Alicia Jones",
+	"email": "ali.jones.123@gmail.com",
+	"phone_number": "813-293-4145"
+}
+
+###
+
+PUT {{HostAddress}}/leads/2e63341a-e627-48ac-bb1a-9d56e2e9cc4f/decline
+Accept: application/json
+
+###
+
+DELETE {{HostAddress}}/leads/2e63341a-e627-48ac-bb1a-9d56e2e9cc4f
