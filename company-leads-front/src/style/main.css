@@ -1,0 +1,116 @@
+@layer reset, base, default, module, util, component, override;
+
+@import 'normalize.css' layer(reset);
+@import '@/style/token.css' layer(base);
+
+@layer reset {
+	fieldset, ul, ol, h1, h2, h3, h4, h5, h6, p, pre, button {
+		border: 0;
+		padding: 0;
+		margin: 0;
+	}
+
+	input[type="range"] {
+		appearance: none;
+		-webkit-appearance: none;
+		background: transparent;
+		cursor: pointer;
+	}
+
+	button {
+		background-color: transparent;
+		text-decoration: none;
+	}
+
+	ul, ol {
+		list-style: disc inside;
+	}
+}
+
+@layer default {
+	* {
+		box-sizing: border-box;
+	}
+	::marker {
+		margin-right: calc(var(--margin-unit) * 1);
+	}
+
+	::-webkit-scrollbar {
+		width: calc(var(--spacing-unit) * .5);
+		height: calc(var(--spacing-unit) * .5);
+	}
+	::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	::-webkit-scrollbar-track:hover {
+		background: var(--surface-color-4);
+	}
+	::-webkit-scrollbar-thumb {
+		background-color: var(--disable-brand-color);
+		border-radius: var(--full-border-radius);
+	}
+
+	* {
+		scrollbar-width: calc(var(--spacing-unit) * .5);
+		scrollbar-color: var(--disable-brand-color) var(--surface-color-4);
+		scroll-behavior: smooth;
+	}
+
+
+	:focus-visible {
+		outline-color: var(--outline-color);
+		outline-style: var(--outline-style);
+		outline-width: var(--outline-width);
+		outline-offset: var(--outline-offset);
+	}
+
+	a {
+		color: var(--text-link-color);
+		text-decoration: none;
+		cursor: pointer;
+		width: fit-content;
+		height: fit-content;
+	}
+	a:link, a:visited, a:active {
+		text-decoration: none;
+	}
+	a:hover {
+		text-decoration: underline;
+	}
+
+	pre {
+		font-family: var(--font-family-monospace);
+	}
+
+	hr {
+		margin: 0;
+		border: 0 solid var(--divider-color);
+		border-bottom-width: thin;
+		border-right-width: thin;
+		align-self: stretch;
+		height: auto;
+		flex-shrink: 0;
+	}
+
+	svg {
+		width: 1em;
+		height: 1em;
+		font-size: inherit;
+	}
+
+	:root {
+		accent-color: var(--brand-color);
+	}
+
+	body, #app {
+		font-family: var(--font-family);
+		font-weight: var(--font-weight-regular);
+		font-size: calc(var(--font-size) * 0.875);
+		line-height: calc(var(--line-height) * 1.1);
+		letter-spacing: var(--letter-spacing-tight);
+
+		min-height: 100vh;
+		background-color: var(--surface-color-1);
+		color: var(--text-color-1);
+	}
+}

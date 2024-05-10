@@ -1,0 +1,85 @@
+:root {
+	/* spacing */
+	--spacing-unit: 8px;
+	--padding-unit: var(--spacing-unit);
+	--margin-unit: var(--spacing-unit);
+	--border-radius-unit: 4px;
+	--full-border-radius: 99999px;
+
+	/* container spacing */
+	--text-container-small: 10rem;
+	--text-container-medium: 12rem;
+	--text-container-large: 16rem;
+	--text-container-full: 100%;
+
+	/* breakpoint */
+	--breakpoint-xs: 300px;
+	--breakpoint-sm: 600px;
+	--breakpoint-md: 900px;
+	--breakpoint-lg: 1200px;
+	--breakpoint-xl: 1500px;
+	--breakpoint-max: 1800px;
+
+	/* z-index */
+	--index-layer-1: 100;
+	--index-layer-2: 200;
+	--index-layer-3: 300;
+	--index-layer-4: 400;
+	--index-layer-5: 500;
+	--index-layer-6: 600;
+
+	/* font */
+	--font-family-sans: 'Montserrat', ui-sans-serif, 'Cantarell', 'Open Sans', sans-serif;
+	--font-family-serif: ui-serif, 'Georgia', serif;
+	--font-family-monospace: ui-monospace, 'Courier New', monospace;
+	--font-family: var(--font-family-sans), system-ui;
+
+	--font-weight-light: 300;
+	--font-weight-regular: 400;
+	--font-weight-medium: 500;
+	--font-weight-bold: 700;
+
+	--font-size: 1rem;
+	--line-height: 1em;
+
+	--letter-spacing-tighter: -0.05em;
+	--letter-spacing-tight: -0.025em;
+	--letter-spacing-normal: 0em;
+	--letter-spacing-wide: 0.025em;
+	--letter-spacing-wider: 0.05em;
+	--letter-spacing-widest: 0.1em;
+
+	/* elevation */
+	--divider-color: var(--border-color);
+
+	--shadow-none: 0;
+	--shadow-1: 0px 2px 1px -1px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .1)),
+		0px 1px 1px 0px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .04)),
+		0px 1px 3px 0px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .02));
+	--shadow-2: 0px 3px 1px -2px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .1)),
+		0px 2px 2px 0px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .04)),
+		0px 1px 5px 0px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .02));
+	--shadow-3: 0px 2px 4px -1px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .1)),
+		0px 4px 5px 0px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .04)),
+		0px 1px 10px 0px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .02));
+	--shadow-4: 0px 5px 5px -3px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .1)),
+		0px 8px 10px 1px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .04)),
+		0px 3px 14px 2px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .02));
+	--shadow-5: 0px 7px 8px -4px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .1)),
+		0px 12px 17px 2px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .04)),
+		0px 5px 22px 4px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .02));
+	--shadow-6: 0px 8px 10px -5px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .1)),
+		0px 16px 24px 2px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .04)),
+		0px 6px 30px 5px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .02));
+	--shadow-7: 0px 10px 13px -6px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .1)),
+		0px 20px 31px 3px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .04)),
+		0px 8px 38px 7px hsl(var(--shadow-color-hsl) / calc(var(--shadow-strength) + .02));
+
+	/* navigation focus */
+	--outline-color: var(--brand-color);
+	--outline-style: dotted;
+	--outline-width: 2px;
+	--outline-offset: 1px;
+
+	/* colors */
+}
