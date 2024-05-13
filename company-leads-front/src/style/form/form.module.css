@@ -1,0 +1,37 @@
+@layer module {
+	.form {
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: flex-start;
+		align-items: flex-start;
+		gap: calc(var(--spacing-unit) * 2.5);
+		width: 100%;
+	}
+
+	.form_header {
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: flex-start;
+		align-items: flex-start;
+		gap: calc(var(--spacing-unit) * 1);
+		width: 100%;
+	}
+
+	.form_footer {
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: flex-start;
+		align-items: flex-start;
+		gap: calc(var(--spacing-unit) * 1);
+		width: 100%;
+	}
+
+	.form_action {
+		display: flex;
+		flex-flow: row wrap;
+		justify-content: flex-end;
+		align-items: flex-end;
+		gap: calc(var(--spacing-unit) * 2);
+		width: 100%;
+	}
+}

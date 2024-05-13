@@ -1,7 +1,7 @@
 @layer reset, base, default, module, util, component, override;
 
-@import 'normalize.css' layer(reset);
-@import '@/style/token.css' layer(base);
+@import 'normalize.css';
+@import '@/style/token.css';
 
 @layer reset {
 	fieldset, ul, ol, h1, h2, h3, h4, h5, h6, p, pre, button {
@@ -30,38 +30,46 @@
 @layer default {
 	* {
 		box-sizing: border-box;
-	}
-	::marker {
-		margin-right: calc(var(--margin-unit) * 1);
-	}
-
-	::-webkit-scrollbar {
-		width: calc(var(--spacing-unit) * .5);
-		height: calc(var(--spacing-unit) * .5);
-	}
-	::-webkit-scrollbar-track {
-		background: transparent;
-	}
-	::-webkit-scrollbar-track:hover {
-		background: var(--surface-color-4);
-	}
-	::-webkit-scrollbar-thumb {
-		background-color: var(--disable-brand-color);
-		border-radius: var(--full-border-radius);
-	}
-
-	* {
-		scrollbar-width: calc(var(--spacing-unit) * .5);
-		scrollbar-color: var(--disable-brand-color) var(--surface-color-4);
 		scroll-behavior: smooth;
 	}
 
+	::marker {
+		margin-right: calc(var(--margin-unit) * 1);
+	}
 
 	:focus-visible {
 		outline-color: var(--outline-color);
 		outline-style: var(--outline-style);
 		outline-width: var(--outline-width);
 		outline-offset: var(--outline-offset);
+	}
+
+	dialog {
+		position: absolute;
+
+		max-width: var(--breakpoint-lg);
+  	width: 80%;
+		height: fit-content;
+
+		border: 0;
+		border-radius: var(--border-radius-unit);
+	}
+
+	dialog[open] {
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: flex-start;
+		align-items: stretch;
+	
+		width: 100%;
+		gap: calc(var(--spacing-unit) * 3);
+		padding: calc(var(--padding-unit) * 3);
+	
+		background-color: #fff;
+	}
+
+	dialog::backdrop {
+		backdrop-filter: blur(2px);
 	}
 
 	a {
@@ -80,6 +88,10 @@
 
 	pre {
 		font-family: var(--font-family-monospace);
+	}
+
+	strong {
+		font-weight: var(--font-weight-bold);
 	}
 
 	hr {
@@ -102,15 +114,15 @@
 		accent-color: var(--brand-color);
 	}
 
-	body, #app {
+	body {
 		font-family: var(--font-family);
-		font-weight: var(--font-weight-regular);
+		font-weight: var(--font-weight-medium);
 		font-size: calc(var(--font-size) * 0.875);
 		line-height: calc(var(--line-height) * 1.1);
 		letter-spacing: var(--letter-spacing-tight);
 
 		min-height: 100vh;
-		background-color: var(--surface-color-1);
-		color: var(--text-color-1);
+		background-color: var(--background-primary-color);
+		color: var(--text-primary-color);
 	}
 }

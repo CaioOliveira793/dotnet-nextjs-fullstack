@@ -1,0 +1,43 @@
+@layer module {
+	.dialog_header {
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: space-between;
+		align-items: center;
+
+		gap: calc(var(--spacing-unit) * 2);
+		width: 100%;
+	}
+
+	.close_button {
+		display: block;
+		padding: calc(var(--padding-unit) * .5);
+		color: var(--error-color);
+	}
+
+	.close_button svg {
+		width: 2em;
+		height: 2em;
+		fill: currentcolor;
+	}
+
+	.dialog_content {
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: flex-start;
+		align-items: flex-start;
+
+		width: 100%;
+		padding: 0 calc(var(--padding-unit) * 3);
+	}
+
+	.dialog_footer {
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: flex-end;
+
+		width: 100%;
+		padding: 0 calc(var(--padding-unit) * 1);
+		padding-bottom: calc(var(--padding-unit) * 1);
+	}
+}

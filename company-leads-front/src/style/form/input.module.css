@@ -1,0 +1,148 @@
+@layer module {
+	.input {
+		--input-gap: initial;
+		--input-padding: initial;
+		--input-color: initial;
+		--input-border-color: initial;
+		--input-outline: 0;
+		--input-bg-color: initial;
+
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: space-between;
+		align-items: center;
+
+		gap: var(--input-gap);
+		padding: var(--input-padding);
+		outline: var(--input-outline);
+		border: 1px solid;
+		border-color: var(--input-border-color);
+		border-radius: var(--border-radius-unit);
+		background-color: var(--input-bg-color);
+		color: var(--input-color);
+	}
+
+	.input input {
+		border: 0;
+		padding: 0;
+		margin: 0;
+		outline: 0;
+		width: 100%;
+		background-color: transparent;
+		color: inherit;
+
+		font: inherit;
+		line-height: inherit;
+		letter-spacing: inherit;
+	}
+
+	.input input::placeholder {
+		/* TODO: add disable overlay color */
+		color: var(--disable-overlay);
+	}
+
+	.input svg {
+		fill: var(--input-color);
+	}
+
+	.input[data-style-invalid],
+	.input[data-style-invalid]:hover {
+		--input-border-color: var(--error-color);
+		--input-color: var(--error-color);
+	}
+
+	.input:hover {
+		/* TODO: add active overlay color */
+		--input-border-color: var(--active-overlay);
+	}
+
+	.input:focus-within,
+	.input[data-style-focused] {
+		--input-border-color: var(--brand-color);
+		--input-outline: 1px solid var(--brand-color);
+	}
+
+	.input:disabled,
+	.input[data-style-disabled],
+	.input input:disabled {
+		cursor: not-allowed;
+		/* TODO: add disable overlay color */
+		--input-color: var(--disable-overlay);
+	}
+
+	.input[data-style-fullwidth] {
+		width: 100%;
+	}
+
+
+	/* .variant */
+	.contained {
+		--input-bg-color: var(--background-secondary-color);
+		--input-border-color: var(--input-bg-color);
+	}
+
+	.contained:disabled,
+	.contained[data-style-disabled],
+	.contained input:disabled {
+		/* TODO: add disable overlay color */
+		--input-bg-color: var(--disable-overlay);
+		--input-border-color: transparent;
+	}
+
+
+	/* .size */
+	.medium {
+		composes: input_text from '@/style/typography.module.css';
+	}
+
+	.medium input {
+		padding: calc(var(--padding-unit) * 1.2) calc(var(--padding-unit) * 1.6);
+	}
+
+	.medium> :not(input, select):first-child {
+		padding: calc(var(--padding-unit) * 1.2) 0;
+		padding-left: calc(var(--padding-unit) * 1.6);
+	}
+
+	.medium> :not(input):last-child {
+		padding: calc(var(--padding-unit) * 1.2) 0;
+		padding-right: calc(var(--padding-unit) * 1.6);
+	}
+
+	.medium>svg:first-child {
+		box-sizing: content-box;
+	}
+
+	.medium>svg:last-child {
+		box-sizing: content-box;
+	}
+
+
+	/* InputWrapper */
+
+	.input_wrapper {
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: flex-end;
+		align-items: flex-start;
+		gap: var(--spacing-unit);
+	}
+
+	.input_wrapper[data-style-fullwidth] {
+		width: 100%;
+	}
+
+
+	/* InputLabel */
+
+	.asterisk {
+		color: var(--error-color);
+	}
+
+
+	/* ErrorList */
+
+	.error_message:first-letter {
+		text-transform: capitalize;
+	}
+}

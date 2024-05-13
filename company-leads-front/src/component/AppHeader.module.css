@@ -1,0 +1,21 @@
+.container {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: stretch;
+	align-items: flex-start;
+
+	width: 100%;
+}
+
+.tab_container {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: stretch;
+	align-items: flex-start;
+
+	width: 100%;
+}
+
+.tab_button {
+	flex: 1 1;
+}

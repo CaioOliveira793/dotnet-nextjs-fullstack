@@ -1,0 +1,51 @@
+.button {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: center;
+	align-items: center;
+
+	gap: var(--spacing-unit);
+	padding: calc(var(--padding-unit) * 1.5) calc(var(--padding-unit) * 3);
+	border-radius: var(--border-radius-unit);
+
+	cursor: pointer;
+	user-select: none;
+	vertical-align: middle;
+	font-weight: var(--font-weight-bold);
+}
+
+.button svg {
+	color: currentcolor;
+}
+
+.button:disabled,
+.button[disabled] {
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+.button[data-style-variant="primary"] {
+	background-color: var(--brand-color);
+	color: var(--background-secondary-color);
+}
+
+.button[data-style-variant="primary"]:hover {
+	background-color: color-mix(in srgb, var(--brand-color) 60%, white);
+}
+
+.button[data-style-variant="primary"]:active {
+	background-color: color-mix(in srgb, var(--brand-color) 75%, white);
+}
+
+.button[data-style-variant="secondary"] {
+	background-color: var(--background-primary-color);
+	color: var(--text-secondary-color);
+}
+
+.button[data-style-variant="secondary"]:hover {
+	background-color: color-mix(in srgb, var(--background-primary-color) 95%, black);
+}
+
+.button[data-style-variant="secondary"]:active {
+	background-color: color-mix(in srgb, var(--background-primary-color) 97%, black);
+}

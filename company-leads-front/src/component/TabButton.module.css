@@ -1,0 +1,43 @@
+.tab_button {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: center;
+	align-items: center;
+
+	padding: calc(var(--padding-unit) * 2) calc(var(--padding-unit) * 3);
+	border-bottom: 2px solid;
+	border-bottom-color: var(--background-secondary-color);
+
+	background-color: var(--background-secondary-color);
+	color: var(--text-secondary-color);
+
+	cursor: pointer;
+	user-select: none;
+	vertical-align: middle;
+	font-weight: var(--font-weight-medium);
+}
+
+.tab_button svg {
+	color: currentcolor;
+}
+
+.tab_button:disabled,
+.tab_button[disabled] {
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+.tab_button:hover {
+	border-bottom-color: color-mix(in srgb, var(--brand-color) 50%, white);
+	background-color: color-mix(in srgb, var(--background-secondary-color) 95%, black);
+}
+
+.tab_button:active {
+	border-bottom-color: color-mix(in srgb, var(--brand-color) 25%, white);
+	background-color: color-mix(in srgb, var(--background-secondary-color) 97%, black);
+}
+
+.tab_button[data-style-active] {
+	font-weight: var(--font-weight-bold);
+	border-bottom-color: var(--brand-color);
+}

@@ -1,0 +1,58 @@
+@layer module {
+	.heading6 {
+		--heading6-font-size: calc(var(--font-size) * 1.1);
+
+		font-weight: var(--font-weight-medium);
+		font-size: var(--heading6-font-size);
+		line-height: calc(var(--line-height) * 1.2);
+		letter-spacing: var(--letter-spacing-wide);
+	}
+
+	.subtitle {
+		--subtitle-font-size: calc(var(--font-size) * 1);
+
+		font-weight: var(--font-weight-medium);
+		font-size: var(--subtitle-font-size);
+		line-height: calc(var(--line-height) * 1.15);
+		letter-spacing: var(--letter-spacing-normal);
+	}
+
+	.body1 {
+		--body1-font-size: calc(var(--font-size) * 1);
+
+		font-weight: var(--font-weight-medium);
+		font-size: var(--body1-font-size);
+		line-height: calc(var(--line-height) * 1.1);
+		letter-spacing: var(--letter-spacing-tight);
+	}
+
+	.body2 {
+		--body2-font-size: calc(var(--font-size) * 0.875);
+
+		font-weight: var(--font-weight-medium);
+		font-size: var(--body2-font-size);
+		line-height: calc(var(--line-height) * 1.1);
+		letter-spacing: var(--letter-spacing-tight);
+	}
+
+	.input_text {
+		--input-font-size: calc(var(--font-size) * 0.875);
+
+		font-weight: var(--font-weight-regular);
+		font-size: var(--input-font-size);
+		line-height: calc(var(--line-height) * 1.05);
+		letter-spacing: var(--letter-spacing-normal);
+	}
+
+	.error_message,
+	.helper_text,
+	.caption,
+	.tag_small {
+		--caption-font-size: calc(var(--font-size) * 0.75);
+
+		font-weight: var(--font-weight-medium);
+		font-size: var(--caption-font-size);
+		line-height: calc(var(--line-height) * 1.1);
+		letter-spacing: var(--letter-spacing-tighter);
+	}
+}
