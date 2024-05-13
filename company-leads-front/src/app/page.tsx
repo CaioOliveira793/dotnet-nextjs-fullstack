@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
 import { LeadDisplay } from '@/component/LeadDisplay';
 import { AppHeader, Tab } from '@/component/AppHeader';
@@ -11,76 +11,38 @@ import { DialogHeader } from '@/component/surface/DialogHeader';
 import { LeadResource } from '@/resource/Lead';
 
 import ScreenStyle from '@/style/screen.module.css';
+import { LeadQueryParams, listLeads } from '@/service/LeadService';
 
-const leads: LeadResource[] = [
-	{
-		id: '1',
-		created: new Date(),
-		category: 'Painter',
-		description: 'Need to paint two aluminium window and a sliding glass door.',
-		price: 89.5,
-		status: 'New',
-		contact_first_name: 'Yuri Lobachovisk',
-		suburb: 'Yanderra 2574',
-		contact: null,
-	},
-	{
-		id: '2',
-		created: new Date(),
-		category: 'Painter',
-		description: null,
-		price: 89.5,
-		status: 'Accepted',
-		contact_first_name: 'Yuri Lobachovisk',
-		suburb: 'Yanderra 2574',
-		contact: {
-			full_name: 'Yuri Lobachovisk',
-			email: 'yuri.lobachovisk@email.com',
-			phone_number: '0412345678',
-		},
-	},
-	{
-		id: '3',
-		created: new Date(),
-		category: 'Painter',
-		description:
-			'Plaster exposed brick walls (see photos), square off 2 archways (see photos), and expand pantry (see photos).',
-		price: 89.5,
-		status: 'Declined',
-		contact_first_name: 'Yuri Lobachovisk',
-		suburb: 'Yanderra 2574',
-		contact: null,
-	},
-	{
-		id: '4',
-		created: new Date(),
-		category: 'Painter',
-		description:
-			'Plaster exposed brick walls (see photos), square off 2 archways (see photos), and expand pantry (see photos).',
-		price: 89.5,
-		status: 'New',
-		contact_first_name: 'Yuri Lobachovisk',
-		suburb: 'Yanderra 2574',
-		contact: {
-			full_name: 'Yuri Lobachovisk',
-			email: 'yuri.lobachovisk@email.com',
-			phone_number: '0412345678',
-		},
-	},
-];
-
-// TODO: decline lead
-// - [ ] decline lead endpoint
-// TODO: accept lead
-// - [ ] accept lead form
-// - [ ] accept lead validation
-// - [ ] accept lead endpoint
-// TODO: query leads
-// - [ ] query lead endpoint
-// TODO: add pagination component
 export default function Home() {
 	const [tab, setTab] = useState<Tab>(Tab.Invited);
 	const dialogRef = useRef<HTMLDialogElement>(null);
+
+	const [leads, setLeads] = useState<LeadResource[]>([]);
+
+	async function queryLeads(params: LeadQueryParams) {
+		const result = await listLeads(params);
+		if (result.type !== 'SUCCESS') {
+			alert('An unexpected error occurred while querying the leads');
+			setLeads([]);
+			return;
+		}
+
+		setLeads(result.value);
+	}
+
+	async function handleSearchInput(event: ChangeEvent<HTMLInputElement>) {
+		// TODO: add debouncer before search new leads
+		event.target.value;
+	}
+
+	function handleLeadCreated() {
+		alert('Lead created');
+		dialogRef.current?.close();
+	}
+
+	useEffect(() => {
+		queryLeads({ status: tab });
+	}, [tab]);
 
 	return (
 		<div className={ScreenStyle.container}>
@@ -91,7 +53,7 @@ export default function Home() {
 			/>
 
 			<form className={ScreenStyle.search_form}>
-				<TextInput label="Search" inputMode="search" fullwidth />
+				<TextInput label="Search" inputMode="search" fullwidth onChange={handleSearchInput} />
 				<div className={ScreenStyle.search_footer}>
 					<Button type="button" variant="primary" onClick={() => dialogRef.current?.showModal()}>
 						Novo
@@ -101,16 +63,22 @@ export default function Home() {
 
 			<dialog ref={dialogRef}>
 				<DialogHeader title="New lead" onClose={() => dialogRef.current?.close()} />
-				<CreateLeadForm />
+				<CreateLeadForm onLeadCreated={handleLeadCreated} />
 			</dialog>
 
 			<main className={ScreenStyle.content_list}>
 				{leads.map(lead => (
-					<LeadDisplay key={lead.id} className={ScreenStyle.lead_item} lead={lead} />
+					<LeadDisplay
+						key={lead.id}
+						className={ScreenStyle.lead_item}
+						lead={lead}
+						onLeadAccepted={() => queryLeads({ status: tab })}
+						onLeadDeclined={() => queryLeads({ status: tab })}
+					/>
 				))}
 			</main>
 
-			<div className="pagination_container"></div>
+			<div className="pagination_container">{/* TODO: add pagination */}</div>
 		</div>
 	);
 }

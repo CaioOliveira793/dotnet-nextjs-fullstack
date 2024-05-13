@@ -1,6 +1,6 @@
 'use client';
 
-import { HTMLAttributes } from 'react';
+import { HTMLAttributes, useRef } from 'react';
 import { FaCircleUser } from 'react-icons/fa6';
 import { FaLocationDot } from 'react-icons/fa6';
 import { FaSuitcase } from 'react-icons/fa6';
@@ -9,6 +9,8 @@ import { FaEnvelope } from 'react-icons/fa6';
 
 import { LeadResource } from '@/resource/Lead';
 import { Button } from '@/component/Button';
+import { DialogHeader } from '@/component/surface/DialogHeader';
+import { AcceptLeadForm } from '@/component/lead/AcceptLeadForm';
 import { classes } from '@/util/StyleHelper';
 
 import {
@@ -20,12 +22,39 @@ import {
 
 import TypographyStyle from '@/style/typography.module.css';
 import Style from '@/component/LeadDisplay.module.css';
+import { declineLead } from '@/service/LeadService';
 
 export interface LeadDisplayProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
 	lead: LeadResource;
+	onLeadAccepted?(lead: LeadResource): void;
+	onLeadDeclined?(lead: LeadResource): void;
 }
 
-export function LeadDisplay({ lead, className, ...props }: LeadDisplayProps) {
+export function LeadDisplay({
+	lead,
+	onLeadAccepted,
+	onLeadDeclined,
+	className,
+	...props
+}: LeadDisplayProps) {
+	const dialogRef = useRef<HTMLDialogElement>(null);
+
+	async function handleDeclineLead() {
+		const result = await declineLead(lead.id);
+		if (result.type !== 'SUCCESS') {
+			alert('An unexpected error occurred while declining the lead');
+			return;
+		}
+
+		onLeadDeclined?.(lead);
+	}
+
+	function handleLeadAccepted(lead: LeadResource) {
+		alert('Lead accepted');
+		dialogRef.current?.close();
+		onLeadAccepted?.(lead);
+	}
+
 	const name = lead.contact?.full_name ?? lead.contact_first_name;
 	const showMoreInfo = Boolean(lead.description) || lead.contact !== null;
 	const showActions = lead.status === 'New';
@@ -78,8 +107,12 @@ export function LeadDisplay({ lead, className, ...props }: LeadDisplayProps) {
 			{showActions && (
 				<div className={Style.line_container}>
 					<div className={Style.action_container}>
-						<Button variant="primary">Accept</Button>
-						<Button variant="secondary">Decline</Button>
+						<Button variant="primary" onClick={() => dialogRef.current?.showModal()}>
+							Accept
+						</Button>
+						<Button variant="secondary" onClick={handleDeclineLead}>
+							Decline
+						</Button>
 					</div>
 					<p>
 						<strong className={Style.strong_text}>{formatLeadPrice(lead.price)}</strong> Lead
@@ -87,6 +120,11 @@ export function LeadDisplay({ lead, className, ...props }: LeadDisplayProps) {
 					</p>
 				</div>
 			)}
+
+			<dialog ref={dialogRef}>
+				<DialogHeader title="Accept lead" onClose={() => dialogRef.current?.close()} />
+				<AcceptLeadForm lead={lead} onLeadAccepted={handleLeadAccepted} />
+			</dialog>
 		</div>
 	);
 }

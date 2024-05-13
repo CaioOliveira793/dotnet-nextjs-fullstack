@@ -5,8 +5,8 @@ import { TabButton } from '@/component/TabButton';
 import Style from '@/component/AppHeader.module.css';
 
 export enum Tab {
-	Invited,
-	Accepted,
+	Invited = 'New',
+	Accepted = 'Accepted',
 }
 
 export interface AppHeaderProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
