@@ -65,7 +65,7 @@ export function AcceptLeadForm({ lead, onLeadAccepted, ...props }: AcceptLeadFor
 			/>
 			<TextInput
 				name="phone_number"
-				label="Description"
+				label="Phone number"
 				description={<p>Contact phone number.</p>}
 				inputMode="tel"
 				fullwidth
