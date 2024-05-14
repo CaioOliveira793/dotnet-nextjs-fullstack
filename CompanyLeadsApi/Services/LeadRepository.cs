@@ -8,35 +8,38 @@ using Microsoft.EntityFrameworkCore;
 using CompanyLeadsApi.Domain;
 using CompanyLeadsApi.Models;
 using CompanyLeadsApi.Resource;
+using Microsoft.Extensions.Logging;
 
 namespace CompanyLeadsApi.Services;
 
 public class LeadRepository : ILeadRepository
 {
-    public LeadRepository(AppDbContext context)
+    public LeadRepository(AppDbContext context, ILogger<LeadRepository> logger)
     {
-        _context = context;
+        this.context = context;
+        this.logger = logger;
     }
 
 
     public async Task<Lead?> GetLead(Guid id)
     {
-        IQueryable<LeadModel> queryable = _context.Leads.AsQueryable();
+        IQueryable<LeadModel> queryable = context.Leads.AsQueryable();
 
         try
         {
             LeadModel? model = await queryable.AsNoTracking().FirstAsync(row => row.ID == id);
             return model?.ToDomain();
         }
-        catch (InvalidOperationException)
+        catch (InvalidOperationException err)
         {
+            logger.LogError("error getting lead from database. Exception = {}", err.ToString());
             return null;
         }
     }
 
     public async Task<IEnumerable<LeadResource>> QueryLeads(LeadQuery query, PaginationMetadata pagination)
     {
-        IQueryable<LeadModel> queryable = _context.Leads.AsQueryable().AsNoTracking();
+        IQueryable<LeadModel> queryable = context.Leads.AsQueryable().AsNoTracking();
 
         if (query.Status is LeadStatus status)
         {
@@ -45,29 +48,41 @@ public class LeadRepository : ILeadRepository
         if (query.SearchTerm is string term)
         {
             queryable = queryable.Where(row => row.Category == term
-                || row.Description != null && row.Description.Contains(term));
+                || (row.Description != null && row.Description.Contains(term)));
         }
 
-        LeadModel[] models = await queryable
-            .OrderBy(row => row.ID)
-            .Skip((int)(pagination.Size * pagination.PageIndex))
-            .Take((int)pagination.Size)
-            .ToArrayAsync();
-
-        return models.Select(model => model.ToResource());
+        try
+        {
+            LeadModel[] models = await queryable
+                .OrderBy(row => row.ID)
+                .Skip((int)(pagination.Size * pagination.PageIndex))
+                .Take((int)pagination.Size)
+                .ToArrayAsync();
+            return models.Select(model => model.ToResource());
+        }
+        catch (Exception err)
+        {
+            logger.LogError("error querying leads from database. Exception = {}", err.ToString());
+            throw;
+        }
     }
 
     public async Task<bool> CreateLead(Lead lead)
     {
-        _context.Leads.Add(LeadModel.FromDomain(lead));
+        context.Leads.Add(LeadModel.FromDomain(lead));
 
         try
         {
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
             return false;
+        }
+        catch (Exception err)
+        {
+            logger.LogError("error inserting lead into database. Exception = {}", err.ToString());
+            throw;
         }
 
         return true;
@@ -97,15 +112,20 @@ public class LeadRepository : ILeadRepository
 
     public async Task<bool> UpdateLead(Lead lead)
     {
-        _context.Leads.Update(LeadModel.FromDomain(lead));
+        context.Leads.Update(LeadModel.FromDomain(lead));
 
         try
         {
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
             return false;
+        }
+        catch (Exception err)
+        {
+            logger.LogError("error updating lead into database. Exception = {}", err.ToString());
+            throw;
         }
 
         return true;
@@ -129,20 +149,26 @@ public class LeadRepository : ILeadRepository
             return false;
         }
 
-        _context.Leads.Remove(LeadModel.FromDomain(lead));
+        context.Leads.Remove(LeadModel.FromDomain(lead));
 
         try
         {
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
             return false;
+        }
+        catch (Exception err)
+        {
+            logger.LogError("error deleting lead from database. Exception = {}", err.ToString());
+            throw;
         }
 
         return true;
     }
 
 
-    private readonly AppDbContext _context;
+    private readonly AppDbContext context;
+    private readonly ILogger<LeadRepository> logger;
 }

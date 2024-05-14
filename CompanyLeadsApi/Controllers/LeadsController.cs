@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 using CompanyLeadsApi.Domain;
 using CompanyLeadsApi.Resource;
@@ -17,10 +17,11 @@ public class LeadsController : ControllerBase
 {
     public static readonly string SalesEmailAddress = "vendas@test.com";
 
-    public LeadsController(ILeadRepository repository, IMailService mailService)
+    public LeadsController(ILeadRepository repository, IMailService mailService, ILogger<LeadsController> logger)
     {
         this.repository = repository;
         this.mailService = mailService;
+        this.logger = logger;
     }
 
 
@@ -30,6 +31,7 @@ public class LeadsController : ControllerBase
         Lead? lead = await repository.GetLead(id);
         if (lead is null)
         {
+            logger.LogInformation("lead not found. ID = {}", id);
             return NotFound();
         }
 
@@ -59,11 +61,19 @@ public class LeadsController : ControllerBase
 
         try
         {
-            await repository.CreateLead(lead);
+            bool created = await repository.CreateLead(lead);
+            if (!created)
+            {
+                logger.LogError("could not create lead into repository due to database concurrency issue.");
+                return Conflict();
+            }
         }
-        catch (DbUpdateConcurrencyException)
+        catch (Exception err)
         {
-            return Conflict();
+            logger.LogError("error inserting lead into repository. Exception = {}", err.ToString());
+            // NOTE: Should return Service Unavailable since this is an intermittent error condition.
+            // https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Status/503
+            return BadRequest();
         }
 
         return LeadResource.FromDomain(lead);
@@ -75,19 +85,32 @@ public class LeadsController : ControllerBase
         Lead? lead = await repository.GetLead(id);
         if (lead is null)
         {
+            logger.LogInformation("lead not found. ID = {}", id);
             return NotFound();
         }
 
         LeadOperationError? error = lead.Accept(contact);
         if (error is LeadOperationError)
         {
+            logger.LogInformation("could not accept lead. lead.Status = {}", lead.Status);
             return UnprocessableEntity(new { message = Lead.InvalidLeadStatusMessage });
         }
 
-        bool updated = await repository.UpdateLead(lead);
-        if (!updated)
+        try
         {
-            return Conflict();
+            bool updated = await repository.UpdateLead(lead);
+            if (!updated)
+            {
+                logger.LogError("could not update lead into repository due to database concurrency issue.");
+                return Conflict();
+            }
+        }
+        catch (Exception err)
+        {
+            logger.LogError("error updating lead into repository. Exception = {}", err.ToString());
+            // NOTE: Should return Service Unavailable since this is an intermittent error condition.
+            // https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Status/503
+            return BadRequest();
         }
 
         try
@@ -99,7 +122,10 @@ public class LeadsController : ControllerBase
                 Content = $"A new lead with price {lead.Price} was accepted"
             });
         }
-        catch { }
+        catch (Exception err)
+        {
+            logger.LogError("error sending lead accepted email. Exception = {}", err.ToString());
+        }
 
         return LeadResource.FromDomain(lead);
     }
@@ -116,13 +142,25 @@ public class LeadsController : ControllerBase
         LeadOperationError? error = lead.Decline();
         if (error is LeadOperationError)
         {
+            logger.LogInformation("could not decline lead. lead.Status = {}", lead.Status);
             return UnprocessableEntity(new { message = Lead.InvalidLeadStatusMessage });
         }
 
-        bool updated = await repository.UpdateLead(lead);
-        if (!updated)
+        try
         {
-            return Conflict();
+            bool updated = await repository.UpdateLead(lead);
+            if (!updated)
+            {
+                logger.LogError("could not update lead into repository due to database concurrency issue.");
+                return Conflict();
+            }
+        }
+        catch (Exception err)
+        {
+            logger.LogError("error updating lead into repository. Exception = {}", err.ToString());
+            // NOTE: Should return Service Unavailable since this is an intermittent error condition.
+            // https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Status/503
+            return BadRequest();
         }
 
         return LeadResource.FromDomain(lead);
@@ -131,15 +169,29 @@ public class LeadsController : ControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult> DeleteLead(Guid id)
     {
-        bool deleted = await repository.DeleteLeadByID(id);
-        if (!deleted)
+        try
         {
-            return NotFound();
+            bool deleted = await repository.DeleteLeadByID(id);
+            if (!deleted)
+            {
+                logger.LogInformation("lead not found. ID = {}", id);
+                return NotFound();
+            }
         }
+        catch (Exception err)
+        {
+            logger.LogError("error deleting lead from repository. Exception = {}", err.ToString());
+            // NOTE: Should return Service Unavailable since this is an intermittent error condition.
+            // https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Status/503
+            return BadRequest();
+        }
+
+        logger.LogInformation("lead deleted. ID = {}", id);
 
         return NoContent();
     }
 
     private readonly ILeadRepository repository;
     private readonly IMailService mailService;
+    private readonly ILogger<LeadsController> logger;
 }

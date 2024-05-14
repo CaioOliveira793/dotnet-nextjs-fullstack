@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 using CompanyLeadsApi.Models;
 using CompanyLeadsApi.Services;
-using System;
 
 namespace CompanyLeadsApi;
 
