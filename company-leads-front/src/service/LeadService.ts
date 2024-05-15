@@ -145,7 +145,7 @@ export function applyLeadQuery(
 	params: URLSearchParams = new URLSearchParams()
 ): URLSearchParams {
 	if (isSome(query.page)) params.set('page', query.page!.toString());
-	if (isSome(query.search)) params.set('search', query.search!);
+	if (query.search) params.set('search', query.search!);
 	if (isSome(query.status)) params.set('status', query.status!);
 	return params;
 }

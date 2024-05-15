@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 
 import { LeadDisplay } from '@/component/LeadDisplay';
 import { AppHeader, Tab } from '@/component/AppHeader';
@@ -9,14 +9,15 @@ import { TextInput } from '@/component/form/TextInput';
 import { CreateLeadForm } from '@/component/lead/CreateLeadForm';
 import { DialogHeader } from '@/component/surface/DialogHeader';
 import { LeadResource } from '@/resource/Lead';
-
-import ScreenStyle from '@/style/screen.module.css';
 import { LeadQueryParams, listLeads } from '@/service/LeadService';
+import { Debouncer } from '@/util/Debouncer';
+import Style from '@/style/screen.module.css';
 
 export default function Home() {
-	const [tab, setTab] = useState<Tab>(Tab.Invited);
 	const dialogRef = useRef<HTMLDialogElement>(null);
+	const debounceRef = useRef(new Debouncer(queryLeads, 1200));
 
+	const [tab, setTab] = useState<Tab>(Tab.Invited);
 	const [leads, setLeads] = useState<LeadResource[]>([]);
 
 	async function queryLeads(params: LeadQueryParams) {
@@ -30,14 +31,23 @@ export default function Home() {
 		setLeads(result.value);
 	}
 
-	async function handleSearchInput(event: ChangeEvent<HTMLInputElement>) {
-		// TODO: add debouncer before search new leads
-		event.target.value;
+	function handleSearchInput(event: ChangeEvent<HTMLInputElement>) {
+		const term = event.target.value || undefined;
+		debounceRef.current.execSafeAbort({ status: tab, search: term });
+	}
+
+	function handleSearchForm(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+		debounceRef.current.abort();
+		const data = new FormData(event.target as HTMLFormElement);
+		const term = (data.get('search') as string) || undefined;
+		queryLeads({ status: tab, search: term });
 	}
 
 	function handleLeadCreated() {
 		alert('Lead created');
 		dialogRef.current?.close();
+		debounceRef.current.abort();
 		queryLeads({ status: tab });
 	}
 
@@ -46,16 +56,22 @@ export default function Home() {
 	}, [tab]);
 
 	return (
-		<div className={ScreenStyle.container}>
+		<div className={Style.container}>
 			<AppHeader
 				tab={tab}
 				onTabAccepted={() => setTab(Tab.Accepted)}
 				onTabInvited={() => setTab(Tab.Invited)}
 			/>
 
-			<form className={ScreenStyle.search_form}>
-				<TextInput label="Search" inputMode="search" fullwidth onChange={handleSearchInput} />
-				<div className={ScreenStyle.search_footer}>
+			<form className={Style.search_form} onSubmit={handleSearchForm}>
+				<TextInput
+					name="search"
+					label="Search"
+					inputMode="search"
+					fullwidth
+					onChange={handleSearchInput}
+				/>
+				<div className={Style.search_footer}>
 					<Button type="button" variant="primary" onClick={() => dialogRef.current?.showModal()}>
 						Novo
 					</Button>
@@ -67,11 +83,11 @@ export default function Home() {
 				<CreateLeadForm onLeadCreated={handleLeadCreated} />
 			</dialog>
 
-			<main className={ScreenStyle.content_list}>
+			<main className={Style.content_list}>
 				{leads.map(lead => (
 					<LeadDisplay
 						key={lead.id}
-						className={ScreenStyle.lead_item}
+						className={Style.lead_item}
 						lead={lead}
 						onLeadAccepted={() => queryLeads({ status: tab })}
 						onLeadDeclined={() => queryLeads({ status: tab })}
