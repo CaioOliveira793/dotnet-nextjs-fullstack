@@ -5,10 +5,10 @@
 	"author": "Caio Oliveira <caio.oliveira@igma.do>",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/CaioOliveira793/dotnet-nextjs-fullstack+git"
+		"url": "https://github.com/caio-oliv/dotnet-nextjs-fullstack+git"
 	},
 	"bugs": {
-		"url": "https://github.com/CaioOliveira793/dotnet-nextjs-fullstack/issues"
+		"url": "https://github.com/caio-oliv/dotnet-nextjs-fullstack/issues"
 	},
 	"keywords": [
 		"challenge",
